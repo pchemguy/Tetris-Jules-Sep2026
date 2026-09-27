@@ -5,14 +5,14 @@ sensible and testable units of work.
 
 ## 1. Project Initialization
 
-- [ ] **Task 1.1**: Initialize Vite project with Vanilla TypeScript
+- [x] **Task 1.1**: Initialize Vite project with Vanilla TypeScript
   (`npm create vite@latest . -- --template vanilla-ts`).
   - *Verification*: `npm install` and `npm run dev` start a default Vite page.
-- [ ] **Task 1.2**: Set up basic HTML skeleton and CSS grid/flexbox layout for
+- [x] **Task 1.2**: Set up basic HTML skeleton and CSS grid/flexbox layout for
   the game container (Center playfield, Left panel, Right panel).
   - *Verification*: Visual inspection shows three distinct columns/areas on
     the page.
-- [ ] **Task 1.3**: Add a `<canvas>` element to the center playfield with fixed
+- [x] **Task 1.3**: Add a `<canvas>` element to the center playfield with fixed
   internal resolution (e.g., 300x600 for a 10x20 grid at 30px per block).
   - *Verification*: Canvas element exists and draws a solid background color.
 
