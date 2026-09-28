@@ -1,6 +1,7 @@
 import { TetrominoType, GRID_WIDTH } from './constants.ts';
 import { TetrominoShapes } from './shapes.ts';
 import type { ShapeMatrix } from './shapes.ts';
+import { WallKickData, IWallKickData } from './srs.ts';
 
 export class Piece {
   public x: number;
@@ -38,15 +39,45 @@ export class Piece {
   }
 
   public attemptRotate(matrix: import('./Matrix.ts').Matrix): boolean {
-    const originalRotation = this.rotationIndex;
+    const oldRotation = this.rotationIndex;
     this.rotate();
+    const newRotation = this.rotationIndex;
 
-    if (!matrix.isCollision(this.x, this.y, this.getShape())) {
-      return true; // Rotated successfully
+    const shape = this.getShape();
+
+    // The 'O' piece doesn't need to wall kick, it just rotates in place (effectively doing nothing)
+    if (this.type === TetrominoType.O) {
+      if (!matrix.isCollision(this.x, this.y, shape)) {
+        return true;
+      }
+      this.rotationIndex = oldRotation;
+      return false;
     }
 
-    // Basic rotation failed, revert (Wall kicks will be implemented later)
-    this.rotationIndex = originalRotation;
+    const kickData = this.type === TetrominoType.I ? IWallKickData : WallKickData;
+    const tests = kickData[oldRotation][newRotation];
+
+    for (const [dx, dy] of tests) {
+      // Note: SRS y-axis goes up in standard docs, but our grid y-axis goes down.
+      // So we flip the sign of dy to match our coordinate system (y grows downwards).
+      const testX = this.x + dx;
+      const testY = this.y - dy;
+
+      if (!matrix.isCollision(testX, testY, shape)) {
+        this.x = testX;
+        this.y = testY;
+        return true; // Wall kick successful
+      }
+    }
+
+    // All kicks failed, revert rotation
+    this.rotationIndex = oldRotation;
     return false;
+  }
+
+  public hardDrop(matrix: import('./Matrix.ts').Matrix): void {
+    while (!matrix.isCollision(this.x, this.y + 1, this.getShape())) {
+      this.y++;
+    }
   }
 }

@@ -31,6 +31,33 @@ export class Matrix {
     return x < 0 || x >= GRID_WIDTH || y >= GRID_HEIGHT || y < 0; // Negative y is out of bounds for Matrix itself, but pieces can spawn there. Collision logic handles this.
   }
 
+  public checkLines(): number {
+    let linesCleared = 0;
+
+    // Iterate from bottom to top
+    for (let y = GRID_HEIGHT - 1; y >= 0; y--) {
+      let isFull = true;
+      for (let x = 0; x < GRID_WIDTH; x++) {
+        if (this.grid[y][x] === 0) {
+          isFull = false;
+          break;
+        }
+      }
+
+      if (isFull) {
+        linesCleared++;
+        // Remove the row and unshift a new empty row at the top
+        this.grid.splice(y, 1);
+        this.grid.unshift(Array(GRID_WIDTH).fill(0));
+        // We removed a row, so the row that shifted down into index 'y'
+        // needs to be checked in the next iteration. Increment y to counteract the decrement.
+        y++;
+      }
+    }
+
+    return linesCleared;
+  }
+
   public isCollision(pieceX: number, pieceY: number, shape: ShapeMatrix): boolean {
     for (let r = 0; r < shape.length; r++) {
       for (let c = 0; c < shape[r].length; c++) {

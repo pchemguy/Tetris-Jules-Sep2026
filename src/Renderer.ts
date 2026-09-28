@@ -41,6 +41,28 @@ export class Renderer {
     }
   }
 
+  public drawGhostPiece(piece: Piece, matrix: Matrix): void {
+    // Clone coordinates to simulate hard drop
+    let ghostY = piece.y;
+    while (!matrix.isCollision(piece.x, ghostY + 1, piece.getShape())) {
+      ghostY++;
+    }
+
+    const shape = piece.getShape();
+    const color = TetrominoColors[piece.type];
+
+    for (let y = 0; y < shape.length; y++) {
+      for (let x = 0; x < shape[y].length; x++) {
+        if (shape[y][x] !== 0) {
+          const drawY = ghostY + y - HIDDEN_ROWS;
+          if (drawY >= 0) {
+            this.drawGhostBlock(piece.x + x, drawY, color);
+          }
+        }
+      }
+    }
+  }
+
   private drawBlock(x: number, y: number, color: string): void {
     const px = x * BLOCK_SIZE;
     const py = y * BLOCK_SIZE;
@@ -57,5 +79,15 @@ export class Renderer {
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     this.ctx.fillRect(px, py + BLOCK_SIZE - 2, BLOCK_SIZE, 2);
     this.ctx.fillRect(px + BLOCK_SIZE - 2, py, 2, BLOCK_SIZE);
+  }
+
+  private drawGhostBlock(x: number, y: number, color: string): void {
+    const px = x * BLOCK_SIZE;
+    const py = y * BLOCK_SIZE;
+
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = 2;
+    // Draw hollow block
+    this.ctx.strokeRect(px + 1, py + 1, BLOCK_SIZE - 2, BLOCK_SIZE - 2);
   }
 }

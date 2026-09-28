@@ -29,6 +29,10 @@ export class GameLoop {
     }
   }
 
+  public setTickRate(newRate: number): void {
+    this.tickRate = newRate;
+  }
+
   private loop(time: number): void {
     if (!this.isRunning) return;
 

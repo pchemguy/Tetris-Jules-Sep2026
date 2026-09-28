@@ -70,51 +70,51 @@ sensible and testable units of work.
 
 ## 5. Locking and Line Clearing
 
-- [ ] **Task 5.1**: Implement Locking logic. When a piece collides moving
+- [x] **Task 5.1**: Implement Locking logic. When a piece collides moving
   downwards, write its blocks to the `Matrix` and spawn a new piece at the top.
   - *Verification*: Piece drops, hits the bottom, turns into locked blocks,
     and a new piece spawns.
-- [ ] **Task 5.2**: Implement `Matrix.checkLines()` to identify and remove full
+- [x] **Task 5.2**: Implement `Matrix.checkLines()` to identify and remove full
   rows, shifting rows above downwards.
   - *Verification*: Fill a row completely, drop a piece to lock, and observe
     the row disappear and blocks shift down.
-- [ ] **Task 5.3**: Implement Game Over detection (spawning a new piece
+- [x] **Task 5.3**: Implement Game Over detection (spawning a new piece
   immediately results in a collision).
   - *Verification*: Stack pieces to the top; verify the game stops when a new
     piece cannot spawn.
 
 ## 6. Advanced Mechanics
 
-- [ ] **Task 6.1**: Implement SRS Wall Kicks for rotation.
+- [x] **Task 6.1**: Implement SRS Wall Kicks for rotation.
   - *Verification*: Piece successfully rotates near walls/blocks by "kicking"
     left, right, or up.
-- [ ] **Task 6.2**: Implement Hard Drop (instantly calculate lowest collision
+- [x] **Task 6.2**: Implement Hard Drop (instantly calculate lowest collision
   point, move piece there, and lock).
   - *Verification*: Pressing 'Space' instantly drops and locks the piece.
-- [ ] **Task 6.3**: Implement Ghost Piece rendering (calculating the hard drop
+- [x] **Task 6.3**: Implement Ghost Piece rendering (calculating the hard drop
   position and drawing it semi-transparently).
   - *Verification*: A ghost outline appears at the bottom indicating where
     the piece will land.
-- [ ] **Task 6.4**: Implement "7-bag" randomizer for piece generation instead
+- [x] **Task 6.4**: Implement "7-bag" randomizer for piece generation instead
   of pure random.
   - *Verification*: Unit test or console log verifies that every sequence of
     7 pieces contains one of each shape.
-- [ ] **Task 6.5**: Implement the "Hold" mechanism.
+- [x] **Task 6.5**: Implement the "Hold" mechanism.
   - *Verification*: Pressing 'Hold' swaps the active piece with the held piece
     (or stores it and gets the next piece if empty).
 
 ## 7. UI & Scoring
 
-- [ ] **Task 7.1**: Implement scoring logic (points for 1, 2, 3, 4 lines
+- [x] **Task 7.1**: Implement scoring logic (points for 1, 2, 3, 4 lines
   cleared).
   - *Verification*: Clearing lines correctly increments the internal score state.
-- [ ] **Task 7.2**: Implement Level logic (level up every 10 lines, increase
+- [x] **Task 7.2**: Implement Level logic (level up every 10 lines, increase
   gravity speed).
   - *Verification*: Reaching 10 lines increases the level and makes pieces
     drop faster.
-- [ ] **Task 7.3**: Update DOM elements to display Score, Level, and Lines.
+- [x] **Task 7.3**: Update DOM elements to display Score, Level, and Lines.
   - *Verification*: On-screen counters update correctly during gameplay.
-- [ ] **Task 7.4**: Implement "Next" piece queue rendering (showing the next 3
+- [x] **Task 7.4**: Implement "Next" piece queue rendering (showing the next 3
   pieces) and "Hold" piece rendering in their respective UI panels.
   - *Verification*: Side panels correctly display the held piece and upcoming
     pieces.

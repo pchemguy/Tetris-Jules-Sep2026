@@ -58,4 +58,25 @@ describe('Matrix', () => {
     // Does not collide one space above
     expect(matrix.isCollision(5, 8, square)).toBe(false);
   });
+
+  it('clears full lines and shifts rows down', () => {
+    // Fill row 19 (bottom row)
+    for (let x = 0; x < GRID_WIDTH; x++) {
+      matrix.set(x, 19, TetrominoType.I);
+    }
+
+    // Put a block on row 18
+    matrix.set(5, 18, TetrominoType.T);
+
+    const cleared = matrix.checkLines();
+
+    expect(cleared).toBe(1);
+
+    // Row 19 should now contain what was on row 18
+    expect(matrix.get(5, 19)).toBe(TetrominoType.T);
+    expect(matrix.get(0, 19)).toBe(0);
+
+    // Row 18 should now be empty (shifted down from 17)
+    expect(matrix.get(5, 18)).toBe(0);
+  });
 });

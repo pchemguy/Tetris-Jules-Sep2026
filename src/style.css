@@ -51,6 +51,11 @@ h2 {
   height: 100px;
   /* Visual placeholder for hold/next queues */
   background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: bold;
 }
 
 .stats {
