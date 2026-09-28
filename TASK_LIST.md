@@ -53,17 +53,17 @@ sensible and testable units of work.
 
 ## 4. Movement & Input Handling
 
-- [ ] **Task 4.1**: Setup keyboard event listeners (Keydown/Keyup) and map them
+- [x] **Task 4.1**: Setup keyboard event listeners (Keydown/Keyup) and map them
   to actions (`Left`, `Right`, `Down`, `Rotate`).
   - *Verification*: Pressing keys logs the corresponding action to the console.
-- [ ] **Task 4.2**: Implement basic left/right horizontal movement for the
+- [x] **Task 4.2**: Implement basic left/right horizontal movement for the
   active `Piece`, validating against `Matrix.isCollision`.
   - *Verification*: Piece can be moved left and right but stops at the edges.
-- [ ] **Task 4.3**: Implement Soft Drop (down movement) and gravity tick
+- [x] **Task 4.3**: Implement Soft Drop (down movement) and gravity tick
   (automatic downward movement).
   - *Verification*: Piece automatically moves down every tick, and pressing
     'Down' moves it faster.
-- [ ] **Task 4.4**: Implement basic rotation for the `Piece` (without wall
+- [x] **Task 4.4**: Implement basic rotation for the `Piece` (without wall
   kicks initially).
   - *Verification*: Piece rotates on command but fails to rotate if blocked
     by walls.

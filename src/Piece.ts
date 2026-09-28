@@ -27,4 +27,26 @@ export class Piece {
     // Basic rotation without wall kicks
     this.rotationIndex = (this.rotationIndex + 1) % 4;
   }
+
+  public move(dx: number, dy: number, matrix: import('./Matrix.ts').Matrix): boolean {
+    if (!matrix.isCollision(this.x + dx, this.y + dy, this.getShape())) {
+      this.x += dx;
+      this.y += dy;
+      return true; // Moved successfully
+    }
+    return false; // Collision prevented movement
+  }
+
+  public attemptRotate(matrix: import('./Matrix.ts').Matrix): boolean {
+    const originalRotation = this.rotationIndex;
+    this.rotate();
+
+    if (!matrix.isCollision(this.x, this.y, this.getShape())) {
+      return true; // Rotated successfully
+    }
+
+    // Basic rotation failed, revert (Wall kicks will be implemented later)
+    this.rotationIndex = originalRotation;
+    return false;
+  }
 }
