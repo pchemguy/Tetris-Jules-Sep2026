@@ -11,7 +11,9 @@
       <div id="left-panel" class="panel">
         <div class="panel-section">
           <h2>Hold</h2>
-          <div id="hold-box" class="preview-box"></div>
+          <div class="preview-box">
+            <canvas id="hold-canvas" width="100" height="100"></canvas>
+          </div>
         </div>
         <div class="panel-section stats">
           <div>Score: <span id="score">0</span></div>
@@ -46,7 +48,11 @@
       <div id="right-panel" class="panel">
         <div class="panel-section">
           <h2>Next</h2>
-          <div id="next-box" class="preview-box"></div>
+          <div class="preview-box" id="next-box-container">
+            <canvas id="next-canvas-0" width="100" height="100"></canvas>
+            <canvas id="next-canvas-1" width="100" height="100"></canvas>
+            <canvas id="next-canvas-2" width="100" height="100"></canvas>
+          </div>
         </div>
       </div>
     </div>

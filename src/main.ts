@@ -2,7 +2,7 @@ import { GameLoop } from './GameLoop.ts';
 import { Matrix } from './Matrix.ts';
 import { Piece } from './Piece.ts';
 import { Renderer } from './Renderer.ts';
-import { TetrominoType, TetrominoColors } from './constants.ts';
+import { TetrominoType } from './constants.ts';
 import { InputHandler } from './InputHandler.ts';
 import { AudioManager } from './AudioManager.ts';
 
@@ -21,19 +21,21 @@ if (ctx) {
   // 7-bag randomizer
   let bag: TetrominoType[] = [];
 
-  const fillBag = () => {
-    const types = Object.values(TetrominoType);
-    // Fisher-Yates shuffle
-    for (let i = types.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [types[i], types[j]] = [types[j], types[i]];
+  const ensureBagHasPieces = () => {
+    while (bag.length < 4) {
+      const types = Object.values(TetrominoType);
+      // Fisher-Yates shuffle
+      for (let i = types.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [types[i], types[j]] = [types[j], types[i]];
+      }
+      bag = bag.concat(types);
     }
-    bag = types;
   };
 
   const getNextPiece = () => {
-    if (bag.length === 0) fillBag();
-    const type = bag.pop()!;
+    ensureBagHasPieces();
+    const type = bag.shift()!;
     return new Piece(type);
   };
 
@@ -194,8 +196,14 @@ if (ctx) {
   const scoreEl = document.getElementById('score')!;
   const levelEl = document.getElementById('level')!;
   const linesEl = document.getElementById('lines')!;
-  const holdBox = document.getElementById('hold-box')!;
-  const nextBox = document.getElementById('next-box')!;
+  const holdCanvas = document.getElementById('hold-canvas') as HTMLCanvasElement;
+  const holdCtx = holdCanvas.getContext('2d')!;
+  const nextCanvases = [
+    document.getElementById('next-canvas-0') as HTMLCanvasElement,
+    document.getElementById('next-canvas-1') as HTMLCanvasElement,
+    document.getElementById('next-canvas-2') as HTMLCanvasElement
+  ];
+  const nextCtxs = nextCanvases.map(c => c.getContext('2d')!);
 
   const menuOverlay = document.getElementById('menu-overlay')!;
   const pauseOverlay = document.getElementById('pause-overlay')!;
@@ -242,25 +250,14 @@ if (ctx) {
       finalScoreEl.textContent = score.toString();
     }
 
-    // Render Next Queue (HTML representation for simplicity, alternatively could use multiple canvases)
-    nextBox.innerHTML = '';
-    const nextPreview = document.createElement('div');
-    nextPreview.className = 'queue-item';
-    // Just showing the immediate next piece type for now
-    if (bag.length === 0) fillBag();
-    nextPreview.textContent = bag[bag.length - 1];
-    nextPreview.style.color = TetrominoColors[bag[bag.length - 1]];
-    nextBox.appendChild(nextPreview);
+    // Render Next Queue
+    ensureBagHasPieces();
+    for (let i = 0; i < 3; i++) {
+      Renderer.drawPreview(nextCtxs[i], bag[i]);
+    }
 
     // Render Hold Queue
-    holdBox.innerHTML = '';
-    if (heldPieceType) {
-      const holdPreview = document.createElement('div');
-      holdPreview.className = 'queue-item';
-      holdPreview.textContent = heldPieceType;
-      holdPreview.style.color = TetrominoColors[heldPieceType];
-      holdBox.appendChild(holdPreview);
-    }
+    Renderer.drawPreview(holdCtx, heldPieceType);
   };
 
   // Initial DOM update

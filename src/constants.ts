@@ -1,5 +1,5 @@
 export const GRID_WIDTH = 10;
-export const GRID_HEIGHT = 20;
+export const GRID_HEIGHT = 22;
 export const HIDDEN_ROWS = 2; // Rows above the visible playfield
 export const BLOCK_SIZE = 30; // Pixel size of each grid square
 
