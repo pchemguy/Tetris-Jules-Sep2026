@@ -22,6 +22,25 @@
 
       <div id="center-playfield">
         <canvas id="game-canvas" width="300" height="600"></canvas>
+
+        <!-- UI Overlays -->
+        <div id="menu-overlay" class="overlay">
+          <h1 class="title">TETRIS</h1>
+          <button id="btn-start" class="btn">Play Game</button>
+          <div class="high-score-display">High Score: <span id="high-score-menu">0</span></div>
+        </div>
+
+        <div id="pause-overlay" class="overlay hidden">
+          <h2>Paused</h2>
+          <button id="btn-resume" class="btn">Resume</button>
+          <button id="btn-restart-pause" class="btn">Restart</button>
+        </div>
+
+        <div id="game-over-overlay" class="overlay hidden">
+          <h2>GAME OVER</h2>
+          <div>Final Score: <span id="final-score">0</span></div>
+          <button id="btn-restart-over" class="btn">Play Again</button>
+        </div>
       </div>
 
       <div id="right-panel" class="panel">

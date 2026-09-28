@@ -4,6 +4,7 @@ import { Piece } from './Piece.ts';
 import { Renderer } from './Renderer.ts';
 import { TetrominoType, TetrominoColors } from './constants.ts';
 import { InputHandler } from './InputHandler.ts';
+import { AudioManager } from './AudioManager.ts';
 
 const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
@@ -12,8 +13,10 @@ if (ctx) {
   const matrix = new Matrix();
   const renderer = new Renderer(ctx);
   const input = new InputHandler();
+  const audio = new AudioManager();
 
-  let isGameOver = false;
+  type GameState = 'MENU' | 'PLAYING' | 'PAUSED' | 'GAMEOVER';
+  let currentState: GameState = 'MENU';
 
   // 7-bag randomizer
   let bag: TetrominoType[] = [];
@@ -42,9 +45,23 @@ if (ctx) {
   let score = 0;
   let level = 1;
   let totalLines = 0;
+  let highScore = parseInt(localStorage.getItem('tetrisHighScore') || '0', 10);
 
   // Starting state
   let activePiece = getNextPiece();
+
+  const resetGame = () => {
+    matrix.clear();
+    score = 0;
+    level = 1;
+    totalLines = 0;
+    heldPieceType = null;
+    canHold = true;
+    bag = [];
+    activePiece = getNextPiece();
+    updateLevelAndGravity();
+    updateDOM();
+  };
 
   const updateLevelAndGravity = () => {
     // Level up every 10 lines
@@ -55,6 +72,7 @@ if (ctx) {
   };
 
   const lockPiece = () => {
+    audio.playSound('LOCK');
     const shape = activePiece.getShape();
     for (let r = 0; r < shape.length; r++) {
       for (let c = 0; c < shape[r].length; c++) {
@@ -78,6 +96,13 @@ if (ctx) {
         case 4: points = 800 * level; break;
       }
       score += points;
+
+      if (linesCleared === 4) {
+        audio.playSound('TETRIS');
+      } else {
+        audio.playSound('CLEAR');
+      }
+
       updateLevelAndGravity();
       updateDOM();
     }
@@ -88,14 +113,20 @@ if (ctx) {
 
     // Game Over check: if the new piece immediately collides
     if (matrix.isCollision(activePiece.x, activePiece.y, activePiece.getShape())) {
-      isGameOver = true;
-      console.log('GAME OVER!');
+      currentState = 'GAMEOVER';
+      audio.stopMusic();
+      audio.playSound('GAMEOVER');
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('tetrisHighScore', highScore.toString());
+      }
+      updateDOM();
     }
   };
 
   // Input mapping
   input.on('HOLD', () => {
-    if (isGameOver || !canHold) return;
+    if (currentState !== 'PLAYING' || !canHold) return;
 
     const currentType = activePiece.type;
 
@@ -114,36 +145,50 @@ if (ctx) {
   });
 
   input.on('LEFT', () => {
-    if (isGameOver) return;
-    activePiece.move(-1, 0, matrix);
+    if (currentState !== 'PLAYING') return;
+    if (activePiece.move(-1, 0, matrix)) audio.playSound('MOVE');
   });
 
   input.on('RIGHT', () => {
-    if (isGameOver) return;
-    activePiece.move(1, 0, matrix);
+    if (currentState !== 'PLAYING') return;
+    if (activePiece.move(1, 0, matrix)) audio.playSound('MOVE');
   });
 
   input.on('DOWN', () => {
-    if (isGameOver) return;
+    if (currentState !== 'PLAYING') return;
     if (activePiece.move(0, 1, matrix)) {
       score += 1; // 1 point per soft drop cell
+      audio.playSound('MOVE');
       updateDOM();
     }
   });
 
   input.on('ROTATE', () => {
-    if (isGameOver) return;
-    activePiece.attemptRotate(matrix);
+    if (currentState !== 'PLAYING') return;
+    if (activePiece.attemptRotate(matrix)) audio.playSound('ROTATE');
   });
 
   input.on('DROP', () => {
-    if (isGameOver) return;
+    if (currentState !== 'PLAYING') return;
     const startY = activePiece.y;
     activePiece.hardDrop(matrix);
     const cellsDropped = activePiece.y - startY;
     score += (cellsDropped * 2); // 2 points per hard drop cell
+    audio.playSound('DROP');
     updateDOM();
     lockPiece();
+  });
+
+  input.on('PAUSE', () => {
+    if (currentState === 'PLAYING') {
+      currentState = 'PAUSED';
+      audio.stopMusic();
+      updateDOM();
+    } else if (currentState === 'PAUSED') {
+      currentState = 'PLAYING';
+      audio.playMusic();
+      updateDOM();
+    }
   });
 
   const scoreEl = document.getElementById('score')!;
@@ -152,10 +197,50 @@ if (ctx) {
   const holdBox = document.getElementById('hold-box')!;
   const nextBox = document.getElementById('next-box')!;
 
+  const menuOverlay = document.getElementById('menu-overlay')!;
+  const pauseOverlay = document.getElementById('pause-overlay')!;
+  const gameOverOverlay = document.getElementById('game-over-overlay')!;
+  const highScoreMenuEl = document.getElementById('high-score-menu')!;
+  const finalScoreEl = document.getElementById('final-score')!;
+
+  document.getElementById('btn-start')!.addEventListener('click', () => {
+    resetGame();
+    currentState = 'PLAYING';
+    audio.playMusic();
+    updateDOM();
+  });
+
+  document.getElementById('btn-resume')!.addEventListener('click', () => {
+    currentState = 'PLAYING';
+    audio.playMusic();
+    updateDOM();
+  });
+
+  const handleRestart = () => {
+    resetGame();
+    currentState = 'PLAYING';
+    audio.playMusic();
+    updateDOM();
+  };
+
+  document.getElementById('btn-restart-pause')!.addEventListener('click', handleRestart);
+  document.getElementById('btn-restart-over')!.addEventListener('click', handleRestart);
+
   const updateDOM = () => {
     scoreEl.textContent = score.toString();
     levelEl.textContent = level.toString();
     linesEl.textContent = totalLines.toString();
+
+    // Overlays
+    menuOverlay.classList.toggle('hidden', currentState !== 'MENU');
+    pauseOverlay.classList.toggle('hidden', currentState !== 'PAUSED');
+    gameOverOverlay.classList.toggle('hidden', currentState !== 'GAMEOVER');
+
+    if (currentState === 'MENU') {
+      highScoreMenuEl.textContent = highScore.toString();
+    } else if (currentState === 'GAMEOVER') {
+      finalScoreEl.textContent = score.toString();
+    }
 
     // Render Next Queue (HTML representation for simplicity, alternatively could use multiple canvases)
     nextBox.innerHTML = '';
@@ -182,7 +267,7 @@ if (ctx) {
   updateDOM();
 
   const update = () => {
-    if (isGameOver) return;
+    if (currentState !== 'PLAYING') return;
 
     // Gravity tick
     const moved = activePiece.move(0, 1, matrix);
@@ -194,7 +279,7 @@ if (ctx) {
   const draw = () => {
     renderer.clear();
     renderer.drawMatrix(matrix);
-    if (!isGameOver) {
+    if (currentState === 'PLAYING') {
       renderer.drawGhostPiece(activePiece, matrix);
       renderer.drawPiece(activePiece);
     }

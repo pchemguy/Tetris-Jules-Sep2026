@@ -1,4 +1,4 @@
-export type Action = 'LEFT' | 'RIGHT' | 'DOWN' | 'ROTATE' | 'DROP' | 'HOLD';
+export type Action = 'LEFT' | 'RIGHT' | 'DOWN' | 'ROTATE' | 'DROP' | 'HOLD' | 'PAUSE';
 
 export class InputHandler {
   private keyMap: Record<string, Action> = {
@@ -11,6 +11,9 @@ export class InputHandler {
     ' ': 'DROP',
     'c': 'HOLD',
     'C': 'HOLD',
+    'Escape': 'PAUSE',
+    'p': 'PAUSE',
+    'P': 'PAUSE',
   };
 
   private callbacks: Partial<Record<Action, () => void>> = {};

@@ -121,24 +121,24 @@ sensible and testable units of work.
 
 ## 8. Menus, Audio & Polish
 
-- [ ] **Task 8.1**: Implement HTML Overlays for Main Menu, Pause Menu, and
+- [x] **Task 8.1**: Implement HTML Overlays for Main Menu, Pause Menu, and
   Game Over Screen.
   - *Verification*: Game starts paused on Main Menu, Esc pauses gameplay,
     and Game Over shows the restart button.
-- [ ] **Task 8.2**: Integrate Audio Manager to play sounds for movement,
+- [x] **Task 8.2**: Integrate Audio Manager to play sounds for movement,
   locking, line clears, and music.
   - *Verification*: Actions produce corresponding sounds; background music
     plays.
-- [ ] **Task 8.3**: Implement `localStorage` saving for High Scores.
+- [x] **Task 8.3**: Implement `localStorage` saving for High Scores.
   - *Verification*: Refreshing the page persists the High Score.
 
 ## 9. Electron Packaging
 
-- [ ] **Task 9.1**: Create Electron `main.js` and configure it to load the
+- [x] **Task 9.1**: Create Electron `main.js` and configure it to load the
   Vite build.
   - *Verification*: Running `npm run electron:start` opens the game in a
     native window.
-- [ ] **Task 9.2**: Configure `electron-builder` and build the executable for
+- [x] **Task 9.2**: Configure `electron-builder` and build the executable for
   the current OS.
   - *Verification*: A standalone executable is generated and runs successfully
     outside the development environment.
