@@ -18,35 +18,35 @@ sensible and testable units of work.
 
 ## 2. Core Data Structures (No Rendering)
 
-- [ ] **Task 2.1**: Define Enums and Constants (`Colors`, `Shapes`,
+- [x] **Task 2.1**: Define Enums and Constants (`Colors`, `Shapes`,
   `GridSize: 10x20`).
   - *Verification*: TypeScript compiles without errors.
-- [ ] **Task 2.2**: Implement `Matrix` class with a 2D array representation.
+- [x] **Task 2.2**: Implement `Matrix` class with a 2D array representation.
   Include a method to get/set cell values.
   - *Verification*: Unit tests check getting and setting values out of bounds
     (should throw or return null).
-- [ ] **Task 2.3**: Implement `Matrix.clear()` and
+- [x] **Task 2.3**: Implement `Matrix.clear()` and
   `Matrix.isCollision(x, y, shape)`.
   - *Verification*: Unit tests check collision against edges and existing
     blocks.
-- [ ] **Task 2.4**: Define the 7 Tetromino shapes and their SRS rotation arrays.
+- [x] **Task 2.4**: Define the 7 Tetromino shapes and their SRS rotation arrays.
   - *Verification*: Unit tests verify the shape matrices match standard
     Tetris SRS.
 
 ## 3. Basic Game Loop & Rendering
 
-- [ ] **Task 3.1**: Implement `GameLoop` class using `requestAnimationFrame`
+- [x] **Task 3.1**: Implement `GameLoop` class using `requestAnimationFrame`
   for rendering at 60 FPS and a separate tick timer for game logic updates.
   - *Verification*: Console logs tick at a set interval (e.g., 1000ms), while
     render logs tick at 60fps.
-- [ ] **Task 3.2**: Implement `Renderer.drawMatrix(matrix)` to draw the locked
+- [x] **Task 3.2**: Implement `Renderer.drawMatrix(matrix)` to draw the locked
   blocks on the canvas.
   - *Verification*: Hardcode some blocks in the `Matrix` and verify they
     render correctly on screen.
-- [ ] **Task 3.3**: Implement `Piece` class with initial `x, y`, `shape`,
+- [x] **Task 3.3**: Implement `Piece` class with initial `x, y`, `shape`,
   and `rotation` state.
   - *Verification*: `Piece` instantiates correctly with default values.
-- [ ] **Task 3.4**: Implement `Renderer.drawPiece(piece)` to draw the active
+- [x] **Task 3.4**: Implement `Renderer.drawPiece(piece)` to draw the active
   piece over the matrix.
   - *Verification*: Hardcode a `Piece` and verify it renders correctly over
     the matrix.
